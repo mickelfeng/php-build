@@ -16,21 +16,40 @@
       </tr>
     </thead>
     <tbody>
-        <tr><td class='docs'><p>Preserve STDERR on FD3, so we can easily log build
-errors on FD2 to a file and use FD3 for php-build's
-visible error messages.</p>
+        <tr><td class='docs'><p><strong>php-build</strong> is a utility for building various versions
+of <strong>PHP</strong> for using them side by side with each other.</p>
 
-</pre></div></td></tr><tr><td class=docs>
+<p>The overall structure is loosly borrowed from Sam Stephenson's <a href="https://github.com/sstephenson/ruby-build">ruby-build</a>.</p>
 
-<p>Simpe function for resolving a
-relative path to an absolute one
-by only using <code>cd -L</code>.</p>
+<p>Installing is currently done by checking out the <a href="https://github.com/CHH/php-build">php-build</a> Repository:</p>
 
-<p>This is needed because BSD's <code>readlink</code> does not
-support the <code>-f</code> flag which is an issue on OSX.</p>
+<pre><code>git clone git://github.com/CHH/php-build.git
+cd php-build
+./bin/php-build --definitions
+</code></pre>
 
 </td><td class=code><div class=highlight><pre>
 <span class="c">#!/bin/bash</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Usage</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>The most important line in every shell script</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nb">set</span> -e
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This is the usage message, like it's done in 
+<a href="https://github.com/rtomayko/shocco">shocco</a>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="c">#/ php-build, Builds PHP with recipes.</span>
 <span class="c">#/</span>
 <span class="c">#/ Usage: php-build [--definitions] [--ini|i &lt;environment&gt;] [&lt;definition&gt;] [&lt;prefix&gt;]</span>
@@ -47,20 +66,34 @@ support the <code>-f</code> flag which is an issue on OSX.</p>
 <span class="c">#/                  source distribution is used as default php.ini</span>
 <span class="c">#/</span>
 
-<span class="nb">set</span> -e
+</pre></div></td></tr><tr><td class=docs>
 
+<p>Set the <code>PHP_BUILD_DEBUG</code> environment variable to
+<code>yes</code> to trigger the <code>set -x</code> call, which in turn
+outputs every issued shell command to <code>STDOUT</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;$PHP_BUILD_DEBUG&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="nb">set</span> -x
+<span class="k">    </span><span class="nb">set</span> -x
 <span class="k">fi</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Preserve STDERR on FD3, so we can easily log build
+errors on FD2 to a file and use FD3 for php-build's 
+visible error messages.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nb">exec </span>3&lt;&amp;2
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>If <code>-i</code> or <code>--ini</code> is given as first argument, then
-treat the second argument as <code>php.ini</code> file. If this
-file does not exist, than it is looked up later
-in the PHP package.</p>
+<p>Simpe function for resolving a
+relative path to an absolute one
+by only using <code>cd -L</code>.</p>
+
+<p>This is needed because BSD's <code>readlink</code> does not
+support the <code>-f</code> flag which is an issue on OSX.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="k">function </span>realpath <span class="o">{</span>
@@ -78,11 +111,84 @@ in the PHP package.</p>
     <span class="nb">cd</span> <span class="s2">&quot;$cwd&quot;</span>
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Common Variables</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This is the path where php-build is installed. This
+is treated as the base for the <code>share/</code> and <code>tmp/</code>
+folders of php-build.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nv">PHP_BUILD_ROOT</span><span class="o">=</span><span class="k">$(</span>realpath <span class="s2">&quot;$(dirname $0)/..&quot;</span><span class="k">)</span>
 <span class="nv">TMP</span><span class="o">=</span><span class="s2">&quot;$PHP_BUILD_ROOT/tmp/php-build&quot;</span>
-<span class="nv">PHP_DEFAULT_INI</span><span class="o">=</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This file gets copied to <code>$PREFIX/etc/php.ini</code> once
+the build is complete. This is by default the PHP tarball's
+<code>php.ini-production</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">PHP_DEFAULT_INI</span><span class="o">=</span><span class="s2">&quot;php.ini-production&quot;</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Read the list of arguments for the call to <code>./configure</code>
+in PHP's source.</p>
+
+<p>These arguments are read from <code>share/php-build/default_configure_options</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nv">CONFIGURE_OPTIONS</span><span class="o">=</span><span class="k">$(</span>cat <span class="s2">&quot;$PHP_BUILD_ROOT/share/php-build/default_configure_options&quot;</span><span class="k">)</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If <code>-i</code> or <code>--ini</code> is given as first argument, then
+treat the second argument as <code>php.ini</code> file.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;-i&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;--ini&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>If an existing path is passed (and the path is a file)
+then use this file, otherwise use <code>php.ini-&lt;value&gt;</code>
+from the tarball.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> <span class="o">[</span> -f <span class="s2">&quot;$2&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span><span class="nv">PHP_DEFAULT_INI</span><span class="o">=</span><span class="s2">&quot;$2&quot;</span>
+    <span class="k">else</span>
+<span class="k">        </span><span class="nv">PHP_DEFAULT_INI</span><span class="o">=</span><span class="s2">&quot;php.ini-$2&quot;</span>
+    <span class="k">fi</span>
+<span class="k">    </span><span class="nb">shift</span>
+<span class="nb">    shift</span>
+<span class="k">fi</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This is the name of the definition we want to build.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">DEFINITION</span><span class="o">=</span><span class="nv">$1</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>The built PHP version is placed in this directory.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">PREFIX</span><span class="o">=</span><span class="nv">$2</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Error Code to return if a defintion was not found.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="nv">E_DEFINITION_NOT_FOUND</span><span class="o">=</span>127
 
 </pre></div></td></tr><tr><td class=docs>
 
@@ -90,35 +196,18 @@ in the PHP package.</p>
 and displays it on STDERR.</p>
 
 </td><td class=code><div class=highlight><pre>
-<span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;-i&quot;</span> <span class="o">]</span> <span class="o">||</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;--ini&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">    if</span> <span class="o">[</span> -f <span class="s2">&quot;$2&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">        </span><span class="nv">PHP_DEFAULT_INI</span><span class="o">=</span><span class="s2">&quot;$2&quot;</span>
-    <span class="k">fi</span>
-<span class="k">    </span><span class="nv">PHP_DEFAULT_INI</span><span class="o">=</span><span class="s2">&quot;php.ini-$2&quot;</span>
-    <span class="nb">shift</span>
-<span class="nb">    shift</span>
-<span class="k">fi</span>
-
-<span class="nv">DEFINITION</span><span class="o">=</span><span class="nv">$1</span>
-<span class="nv">PREFIX</span><span class="o">=</span><span class="nv">$2</span>
-
-<span class="nv">E_DEFINITION_NOT_FOUND</span><span class="o">=</span>127
-
-</pre></div></td></tr><tr><td class=docs>
-
-<p>This function sets and unsets arguments for <code>configure</code>. Pass it
-the <code>-D</code> option to unset the argument given in <code>$2</code>. Otherwise
-the first argument is the name of the option and the second
-argument contains the optional value.</p>
-
-</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>display_usage <span class="o">{</span>
     grep <span class="s1">&#39;^#/&#39;</span> &lt;<span class="s2">&quot;$0&quot;</span> | cut -c4- &gt;&amp;3
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Init the directories on first run.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>init <span class="o">{</span>
     <span class="k">if</span> <span class="o">[</span> ! -d <span class="s2">&quot;$TMP&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">        </span>mkdir <span class="s2">&quot;$TMP&quot;</span>
+<span class="k">        </span>mkdir -p <span class="s2">&quot;$TMP&quot;</span>
     <span class="k">fi</span>
 
 <span class="k">    if</span> <span class="o">[</span> ! -d <span class="s2">&quot;$TMP/packages&quot;</span> <span class="o">]</span>; <span class="k">then</span>
@@ -138,6 +227,12 @@ argument contains the optional value.</p>
     <span class="k">fi</span>
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Logs a given log text with a [marker] to
+STDERR.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>log <span class="o">{</span>
     <span class="nb">local </span><span class="nv">marker</span><span class="o">=</span><span class="s2">&quot;$1&quot;</span>
     <span class="nb">local </span><span class="nv">text</span><span class="o">=</span><span class="s2">&quot;$2&quot;</span>
@@ -145,6 +240,13 @@ argument contains the optional value.</p>
     <span class="nb">echo</span> <span class="s2">&quot;    [$marker]:  $text&quot;</span> &gt;&amp;3
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Uses uname to check if php-build is run on OSX.
+This is used later on to enable specifc fixes for
+OSX oddnesses in library file placement.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>is_osx <span class="o">{</span>
     <span class="nb">local </span><span class="nv">uname</span><span class="o">=</span><span class="k">$(</span>uname<span class="k">)</span>
 
@@ -155,6 +257,12 @@ argument contains the optional value.</p>
     <span class="k">fi</span>
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Downloads a PHP Source Tarball and extracts it
+to <code>$TMP/source/$DEFINITION</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>download <span class="o">{</span>
     <span class="nb">local </span><span class="nv">url</span><span class="o">=</span><span class="nv">$1</span>
     <span class="nb">local </span><span class="nv">package_file</span><span class="o">=</span><span class="s2">&quot;$TMP/packages/$(basename $url)&quot;</span>
@@ -178,10 +286,22 @@ argument contains the optional value.</p>
 
 <span class="k">    </span>mkdir <span class="s2">&quot;$TMP/source/$DEFINITION&quot;</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>The PHP tarballs have one directory, which is named
+<code>php-&lt;something underminable&gt;</code>, so skip this directory
+on extraction.</p>
+
+</td><td class=code><div class=highlight><pre>
     tar -xj --strip-components 1 -f <span class="s2">&quot;$package_file&quot;</span> -C <span class="s2">&quot;$TMP/source/$DEFINITION&quot;</span>
     <span class="k">return</span> <span class="nv">$?</span>
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>List all defintions found in <code>share/php-build/definitions</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>list_definitions <span class="o">{</span>
     <span class="o">{</span>
         <span class="k">for </span>definition in <span class="s2">&quot;$PHP_BUILD_ROOT/share/php-build/definitions/&quot;</span>*
@@ -189,15 +309,6 @@ argument contains the optional value.</p>
 <span class="k">            </span><span class="nb">echo</span> <span class="k">$(</span>basename <span class="s2">&quot;$definition&quot;</span><span class="k">)</span>
         <span class="k">done</span>
     <span class="o">}</span> | sort &gt;&amp;3
-<span class="o">}</span>
-
-<span class="k">function </span>install_package <span class="o">{</span>
-    <span class="nb">local </span><span class="nv">url</span><span class="o">=</span><span class="nv">$1</span>
-
-    <span class="o">{</span>
-        download <span class="nv">$url</span>
-        build_package <span class="s2">&quot;$TMP/source/$DEFINITION&quot;</span>
-    <span class="o">}</span> &gt;&amp;4 2&gt;&amp;1
 <span class="o">}</span>
 
 <span class="k">function </span>trigger_after_install <span class="o">{</span>
@@ -243,30 +354,63 @@ argument contains the optional value.</p>
     make install &gt; /dev/null
     <span class="nb">cd</span> <span class="s2">&quot;$cwd&quot;</span>
 
-    <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;$PHP_DEFAULT_INI&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">        if</span> <span class="o">[</span> -f <span class="s2">&quot;$source_path/$PHP_DEFAULT_INI&quot;</span> <span class="o">]</span>; <span class="k">then</span>
-<span class="k">            </span><span class="nb">echo</span> <span class="s2">&quot;Using $PHP_DEFAULT_INI as php.ini&quot;</span>
-            cp <span class="s2">&quot;$source_path/$PHP_DEFAULT_INI&quot;</span> <span class="s2">&quot;$PREFIX/etc/php.ini&quot;</span>
-        <span class="k">else</span>
-<span class="k">            </span><span class="nb">echo</span> <span class="s2">&quot;$PHP_DEFAULT_INI not found in $source_path&quot;</span> &gt;&amp;3
-        <span class="k">fi</span>
-<span class="k">    fi</span>
+    <span class="k">if</span> <span class="o">[</span> -f <span class="s2">&quot;$PREFIX/bin/php.dSYM&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span>mv <span class="s2">&quot;$PREFIX/bin/php.dSYM&quot;</span> <span class="s2">&quot;$PREFIX/bin/php&quot;</span>
+    <span class="k">fi</span>
 
-<span class="k">    </span><span class="nb">echo</span> <span class="s2">&quot;Done.&quot;</span>
+<span class="k">    if</span> <span class="o">[</span> -f <span class="s2">&quot;$PREFIX/bin/php-cgi.dSYM&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        </span>mv <span class="s2">&quot;$PREFIX/bin/php-cgi.dSYM&quot;</span> <span class="s2">&quot;$PREFIX/bin/php-cgi&quot;</span>
+    <span class="k">fi</span>
+
+<span class="k">    if</span> <span class="o">[</span> -n <span class="s2">&quot;$PHP_DEFAULT_INI&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">        if</span> <span class="o">[</span> -f <span class="s2">&quot;$source_path/$PHP_DEFAULT_INI&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">            </span>cp <span class="s2">&quot;$source_path/$PHP_DEFAULT_INI&quot;</span> <span class="s2">&quot;$PREFIX/etc/php.ini&quot;</span>
+        <span class="k">else</span>
+<span class="k">            if</span> <span class="o">[</span> -f <span class="s2">&quot;$PHP_DEFAULT_INI&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+<span class="k">                </span>cp <span class="s2">&quot;$PHP_DEFAULT_INI&quot;</span> <span class="s2">&quot;$PREFIX/etc/php.ini&quot;</span>
+            <span class="k">fi</span>
+<span class="k">        fi</span>
+<span class="k">    fi</span>
 <span class="o">}</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>This variable will contain the filtered arguments.</p>
+<h2>Definition commands</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h3>install_package</h3>
+
+<p>Downloads and builds the PHP tarball from the given URL.
+For now only <code>.tar.bz2</code> archives are supported.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">function </span>install_package <span class="o">{</span>
+    <span class="nb">local </span><span class="nv">url</span><span class="o">=</span><span class="nv">$1</span>
+
+    <span class="o">{</span>
+        download <span class="nv">$url</span>
+        build_package <span class="s2">&quot;$TMP/source/$DEFINITION&quot;</span>
+    <span class="o">}</span> &gt;&amp;4 2&gt;&amp;1
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h3>configure_option</h3>
+
+<p>This function sets and unsets arguments for <code>configure</code>. Pass it
+the <code>-D</code> option to unset the argument given in <code>$2</code>. Otherwise
+the first argument is the name of the option and the second
+argument contains the optional value.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="k">function </span>configure_option <span class="o">{</span>
     <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$1&quot;</span> <span class="o">=</span> <span class="s2">&quot;-D&quot;</span> <span class="o">]</span>; <span class="k">then</span>
 </pre></div></td></tr><tr><td class=docs>
 
-<p>If the argument starts with the given string in <code>$1</code>
-then skip it from concatenation. Otherwise add it to
-the filtered options.</p>
+<p>This variable will contain the filtered arguments.</p>
 
 </td><td class=code><div class=highlight><pre>
         <span class="nb">local </span><span class="nv">filtered</span><span class="o">=</span>
@@ -274,7 +418,9 @@ the filtered options.</p>
         <span class="k">for </span>option in <span class="nv">$CONFIGURE_OPTIONS</span>; <span class="k">do</span>
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Trim the leading whitespace added in the concatenation.</p>
+<p>If the argument starts with the given string in <code>$1</code>
+then skip it from concatenation. Otherwise add it to
+the filtered options.</p>
 
 </td><td class=code><div class=highlight><pre>
             <span class="k">case</span> <span class="s2">&quot;$option&quot;</span> in
@@ -285,14 +431,14 @@ the filtered options.</p>
         
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Then replace the old argument list with the new one.</p>
+<p>Trim the leading whitespace added in the concatenation.</p>
 
 </td><td class=code><div class=highlight><pre>
         <span class="nv">filtered</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="s2">&quot;$filtered&quot;</span> | sed -e <span class="s1">&#39;s/[ ]*//&#39;</span><span class="k">)</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Compile PHP with SSL support</p>
+<p>Then replace the old argument list with the new one.</p>
 
 </td><td class=code><div class=highlight><pre>
         <span class="nv">CONFIGURE_OPTIONS</span><span class="o">=</span><span class="s2">&quot;$filtered&quot;</span>
@@ -314,27 +460,74 @@ the filtered options.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Here the magic begins.</p>
+<h3>with_openssl</h3>
+
+<p>Configures PHP with OpenSSL support.</p>
+
+<p>This is left in for backwards compatibility with
+definitions which were written before <code>--with-openssl</code>
+was in the list of default configure arguments.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="k">function </span>with_openssl <span class="o">{</span>
     <span class="nv">stub</span><span class="o">=</span>1
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<h3>with_pear</h3>
+
+<p>Configures a <code>pear</code> install in <code>$PREFIX/pear</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
+<span class="k">function </span>with_pear <span class="o">{</span>
+    <span class="nv">pear_dir</span><span class="o">=</span><span class="s2">&quot;$PREFIX/pear&quot;</span>
+
+    <span class="o">[</span> ! -d <span class="s2">&quot;$PREFIX/pear&quot;</span> <span class="o">]</span> <span class="o">&amp;&amp;</span> mkdir -p <span class="s2">&quot;$PREFIX/pear&quot;</span>
+
+    configure_option <span class="s2">&quot;--with-pear&quot;</span> <span class="s2">&quot;$PREFIX/pear&quot;</span>
+<span class="o">}</span>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<h2>Configure Stage</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>This is invoked by <code>build_package</code> and is used to
+build PHP with the arguments in <code>$CONFIGURE_OPTIONS</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>configure_package <span class="o">{</span>
     <span class="nb">local </span><span class="nv">source_path</span><span class="o">=</span><span class="nv">$1</span>
     <span class="nb">local </span><span class="nv">backup_pwd</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Mac OSX stores some libraries (for example <code>libpng</code>)
+in <code>/usr/X11/lib</code> instead of <code>/usr/lib</code>.</p>
+
+<p>This currently builds PHP without the <code>gettext</code> and <code>readline</code>
+extensions, as I've currently not got them to work on my machine.</p>
+
+</td><td class=code><div class=highlight><pre>
     <span class="k">if </span>is_osx; <span class="k">then</span>
 <span class="k">        </span>configure_option -D <span class="s2">&quot;--with-gettext&quot;</span>
         configure_option -D <span class="s2">&quot;--with-readline&quot;</span>
         configure_option <span class="s2">&quot;--with-libedit&quot;</span>
 
-        configure_option -D <span class="s2">&quot;--with-png-dir&quot;</span>
-        configure_option <span class="s2">&quot;--with-png-dir&quot;</span> <span class="s2">&quot;/usr/X11&quot;</span>
+        configure_option -R <span class="s2">&quot;--with-png-dir&quot;</span> <span class="s2">&quot;/usr/X11&quot;</span>
     <span class="k">fi</span>
 
-<span class="k">    </span><span class="nb">local </span><span class="nv">argv</span><span class="o">=</span><span class="s2">&quot;$CONFIGURE_OPTIONS \</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Add the config-file-path, config-file-scan-dir aswell as the
+prefix to the build options, these cannot be changed by definitions.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="nb">local </span><span class="nv">argv</span><span class="o">=</span><span class="s2">&quot;$CONFIGURE_OPTIONS \</span>
 <span class="s2">--with-config-file-path=&quot;</span><span class="nv">$PREFIX</span>/etc<span class="s2">&quot; \</span>
 <span class="s2">--with-config-file-scan-dir=&quot;</span><span class="nv">$PREFIX</span>/etc/conf.d<span class="s2">&quot; \</span>
 <span class="s2">--prefix=$PREFIX&quot;</span>
@@ -347,7 +540,13 @@ the filtered options.</p>
 <span class="k">        </span>mkdir -p <span class="s2">&quot;$PREFIX/etc/conf.d&quot;</span>
     <span class="k">fi</span>
 
-<span class="k">    if</span> <span class="o">[</span> <span class="s2">&quot;$(uname -p)&quot;</span> <span class="o">=</span> <span class="s2">&quot;x86_64&quot;</span> <span class="o">]</span>; <span class="k">then</span>
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Set the lib dir to <code>lib64</code> on <strong>x86_64</strong>
+systems.</p>
+
+</td><td class=code><div class=highlight><pre>
+    <span class="k">if</span> <span class="o">[</span> <span class="s2">&quot;$(uname -p)&quot;</span> <span class="o">=</span> <span class="s2">&quot;x86_64&quot;</span> <span class="o">]</span>; <span class="k">then</span>
 <span class="k">        </span><span class="nv">argv</span><span class="o">=</span><span class="s2">&quot;$argv --with-libdir=lib64&quot;</span>
     <span class="k">fi</span>
 
@@ -356,16 +555,27 @@ the filtered options.</p>
     <span class="nb">cd</span> <span class="s2">&quot;$backup_pwd&quot;</span>
 <span class="o">}</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Handles build errors, and displays the last 10 lines
+of the build log.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">function </span>build_error <span class="o">{</span>
     <span class="o">{</span>
         <span class="nb">echo</span>
 <span class="nb">        echo</span> <span class="s2">&quot;BUILD ERROR&quot;</span>
-        <span class="nb">echo</span> <span class="k">$(</span>tail -n1 <span class="s2">&quot;$LOG_PATH&quot;</span><span class="k">)</span>
+        <span class="nb">echo</span> <span class="k">$(</span>tail -n10 <span class="s2">&quot;$LOG_PATH&quot;</span><span class="k">)</span>
         <span class="nb">echo</span>
-<span class="nb">        echo</span> <span class="s2">&quot;The Log is available here ${LOG_PATH}&quot;</span>
+<span class="nb">        echo</span> <span class="s2">&quot;The full Log is available here ${LOG_PATH}&quot;</span>
         <span class="nb">echo</span>
     <span class="o">}</span> &gt;&amp;3
     
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Removes the prefix when the build fails.</p>
+
+</td><td class=code><div class=highlight><pre>
     cleanup_abort
 <span class="o">}</span>
 
@@ -375,26 +585,37 @@ the filtered options.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
+<h2>Here the magic begins</h2>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs>
+
 <p>Set up the directories needed for the source
 and the downloaded packages.</p>
 
 </td><td class=code><div class=highlight><pre>
+init
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Display the Usage message if no arguments are given.</p>
+<p>Generate the Path for the build log.</p>
 
 </td><td class=code><div class=highlight><pre>
-init
-
 <span class="nv">TIME</span><span class="o">=</span><span class="s2">&quot;$(date &quot;</span>+%Y%m%d%H%M%S<span class="s2">&quot;)&quot;</span>
 <span class="nv">LOG_PATH</span><span class="o">=</span><span class="s2">&quot;$PHP_BUILD_ROOT/var/log/php-build/error.$DEFINITION.$TIME.log&quot;</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Redirect everything logged to STDERR (except messages by php-build itself)
+to the Log file.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nb">exec </span>4&lt;&gt; <span class="s2">&quot;$LOG_PATH&quot;</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Check if the requested Definition exists.</p>
+<p>Display the Usage message if no arguments are given.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="k">if</span> <span class="o">[</span> -z <span class="nv">$1</span> <span class="o">]</span>; <span class="k">then</span>
@@ -409,9 +630,7 @@ init
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>Load all definition plugins. Plugins register functions
-for use whithin definitions. See the xdebug and pyrus plugins for
-examples.</p>
+<p>Check if the requested Definition exists.</p>
 
 </td><td class=code><div class=highlight><pre>
 <span class="k">if</span> <span class="o">[</span> ! -f <span class="s2">&quot;$PHP_BUILD_ROOT/share/php-build/definitions/$DEFINITION&quot;</span> <span class="o">]</span>; <span class="k">then</span>
@@ -421,7 +640,9 @@ examples.</p>
 
 </pre></div></td></tr><tr><td class=docs>
 
-<p>After Install Triggers are all executables placed in <code>triggers/after-install.d</code></p>
+<p>Load all definition plugins. Plugins register functions
+for use whithin definitions. See the xdebug and pyrus plugins for
+examples.</p>
 
 </td><td class=code><div class=highlight><pre>
 load_plugins <span class="s2">&quot;$PHP_BUILD_ROOT/share/php-build/plugins.d&quot;</span>
@@ -432,19 +653,47 @@ load_plugins <span class="s2">&quot;$PHP_BUILD_ROOT/share/php-build/plugins.d&qu
 <span class="nb">echo</span> <span class="s2">&quot;Building $DEFINITION into $PREFIX&quot;</span>
 <span class="nb">echo</span>
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Handle script termination with the <code>cleanup_abort</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nb">trap </span>cleanup_abort SIGINT SIGTERM
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Handle Script Errors with <code>build_error</code>.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nb">trap </span>build_error ERR EXIT
+
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Source the definition file</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nb">source</span> <span class="s2">&quot;$PHP_BUILD_ROOT/share/php-build/definitions/$DEFINITION&quot;</span>
 
 </pre></div></td></tr><tr><td class=docs>
 
+<p>Run executables placed in <code>share/php-build/after-install.d</code></p>
+
 </td><td class=code><div class=highlight><pre>
 trigger_after_install 2&gt;&amp;4
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Unbind the error handler.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="nb">trap</span> - ERR
 <span class="nb">trap</span> - EXIT
 
+</pre></div></td></tr><tr><td class=docs>
+
+<p>Display a notice if build warnings got logged.</p>
+
+</td><td class=code><div class=highlight><pre>
 <span class="k">if</span> <span class="o">[</span> -n <span class="nv">$LOG_PATH</span> <span class="o">]</span>; <span class="k">then</span>
 <span class="k">    </span>log <span class="s2">&quot;Info&quot;</span> <span class="s2">&quot;The Log File is not empty, but the Build did not fail.\</span>
 <span class="s2"> Maybe just warnings got logged.\</span>
@@ -453,9 +702,15 @@ trigger_after_install 2&gt;&amp;4
 
 log <span class="s2">&quot;Success&quot;</span> <span class="s2">&quot;Built $DEFINITION successfully.&quot;</span>
 
+<span class="nb">trap</span> - SIGINT
+<span class="nb">trap</span> - SIGTERM
+
 
 </pre></div></td></tr><tr><td class=docs>
-</td><td class=code><div class=highlight><pre></td><td class='code'></td></tr>
+
+</td><td class=code><div class=highlight><pre>
+
+</pre></div></td></tr><tr><td class=docs></td><td class='code'></td></tr>
     </tbody>
     </table>
 </div>
