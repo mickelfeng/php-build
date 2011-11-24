@@ -1,0 +1,114 @@
+@import "fonts.css";
+
+body {
+    font-family: "Gentium Book Basic", "Georgia", "Palatino", 
+        "Times New Roman", "Hoefler Text", "Baskerville", serif; 
+    font-size: 1.154em;
+}
+
+.page {
+    width: 720px;
+    margin: 0 auto;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 50px;
+    color: #666;
+}
+
+.footer .amp {
+    color: rgb(250,105,0);
+    font-size: 1.5em;
+    position: relative;
+    top: 4px;
+}
+
+a {
+    color: #487FA0;
+}
+
+a:hover {
+    color: #37607A;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "TeX Gyre Heros", "Helvetica", "Arial", "Lucida Grande", 
+        "Verdana", "Gill Sans", sans-serif; 
+    font-size: 1.000em;
+    text-align: center;
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    color: #444;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding-top: 5px;
+    border-top: 5px solid #eee;
+}
+
+code {
+    font-family: "Lekton", Menlo, Courier New, Courier, Mono, monospace; 
+    font-size: 1.103em;
+}
+
+.intro {
+    margin: 100px 0 0;
+}
+
+.intro > h1 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 5em;
+    color: rgb(250,105,0);
+    margin: 0 0 5px;
+}
+
+.intro > .tagline {
+    font-size: 1.5em;
+    font-style: italic;
+    text-align: center;
+    color: #777;
+    margin: 0;
+}
+
+.nav-main {
+    font-family: "TeX Gyre Heros", "Helvetica", "Arial", 
+        "Lucida Grande", "Verdana", "Gill Sans", sans-serif;
+    text-align: center;
+    background: rgb(105,210,231);
+}
+
+.nav-main > ul {
+    list-style: none;
+}
+
+.nav-main > ul > li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.nav-main a {
+    position: relative;
+    text-decoration: none;
+    color: rgba(0,0,0,0.6);
+    font-weight: bold;
+    font-size: 22px;
+    padding: 12px;
+    display: block;
+}
+
+.nav-main a:active {
+}
+
+.nav-main a:hover {
+    background: rgba(0,0,0,0.4);
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.8);
+    top: -5px;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+}

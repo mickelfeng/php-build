@@ -1,0 +1,158 @@
+.afs-tex-gyre-heros { 
+    font-family: "TeX Gyre Heros", "Helvetica", "Arial", 
+        "Lucida Grande", "Verdana", "Gill Sans", sans-serif;
+}
+
+.afs-gentium-book-basic { 
+    font-family: "Gentium Book Basic", "Georgia", "Palatino", 
+        "Times New Roman", "Hoefler Text", "Baskerville", serif; 
+    font-size: 1.154em;
+}
+
+.afs-tex-gyre-heros {
+    font-family: "TeX Gyre Heros", "Helvetica", "Arial", "Lucida Grande", 
+        "Verdana", "Gill Sans", sans-serif; 
+    font-size: 1.000em;
+}
+
+.afs-lekton { 
+    font-family: "Lekton", Menlo, Courier New, Courier, Mono, monospace; 
+    font-size: 1.103em;
+}
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-bold-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-bold-webfont.woff') format('woff'), url('../fonts/texgyreheros-bold-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-bold-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-bolditalic-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-bolditalic-webfont.woff') format('woff'), url('../fonts/texgyreheros-bolditalic-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-bolditalic-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-italic-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-italic-webfont.woff') format('woff'), url('../fonts/texgyreheros-italic-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-italic-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-regular-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-regular-webfont.woff') format('woff'), url('../fonts/texgyreheros-regular-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-regular-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'Gentium Book Basic';
+    src: url('../fonts/GenBkBasB-webfont.eot');
+    src: local('☺'), url('../fonts/GenBkBasB-webfont.woff') format('woff'), url('../fonts/GenBkBasB-webfont.ttf') format('truetype'), url('../fonts/GenBkBasB-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Gentium Book Basic';
+    src: url('../fonts/GenBkBasBI-webfont.eot');
+    src: local('☺'), url('../fonts/GenBkBasBI-webfont.woff') format('woff'), url('../fonts/GenBkBasBI-webfont.ttf') format('truetype'), url('../fonts/GenBkBasBI-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'Gentium Book Basic';
+    src: url('../fonts/GenBkBasI-webfont.eot');
+    src: local('☺'), url('../fonts/GenBkBasI-webfont.woff') format('woff'), url('../fonts/GenBkBasI-webfont.ttf') format('truetype'), url('../fonts/GenBkBasI-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'Gentium Book Basic';
+    src: url('../fonts/GenBkBasR-webfont.eot');
+    src: local('☺'), url('../fonts/GenBkBasR-webfont.woff') format('woff'), url('../fonts/GenBkBasR-webfont.ttf') format('truetype'), url('../fonts/GenBkBasR-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-bold-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-bold-webfont.woff') format('woff'), url('../fonts/texgyreheros-bold-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-bold-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-bolditalic-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-bolditalic-webfont.woff') format('woff'), url('../fonts/texgyreheros-bolditalic-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-bolditalic-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-italic-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-italic-webfont.woff') format('woff'), url('../fonts/texgyreheros-italic-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-italic-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'TeX Gyre Heros';
+    src: url('../fonts/texgyreheros-regular-webfont.eot');
+    src: local('☺'), url('../fonts/texgyreheros-regular-webfont.woff') format('woff'), url('../fonts/texgyreheros-regular-webfont.ttf') format('truetype'), url('../fonts/texgyreheros-regular-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'Lekton';
+    src: url('../fonts/Lekton-Bold-webfont.eot');
+    src: local('☺'), url('../fonts/Lekton-Bold-webfont.woff') format('woff'), url('../fonts/Lekton-Bold-webfont.ttf') format('truetype'), url('../fonts/Lekton-Bold-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'Lekton';
+    src: url('../fonts/Lekton-Italic-webfont.eot');
+    src: local('☺'), url('../fonts/Lekton-Italic-webfont.woff') format('woff'), url('../fonts/Lekton-Italic-webfont.ttf') format('truetype'), url('../fonts/Lekton-Italic-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: italic;
+}
+
+
+@font-face {
+    font-family: 'Lekton';
+    src: url('../fonts/Lekton-Regular-webfont.eot');
+    src: local('☺'), url('../fonts/Lekton-Regular-webfont.woff') format('woff'), url('../fonts/Lekton-Regular-webfont.ttf') format('truetype'), url('../fonts/Lekton-Regular-webfont.svg#webfontX4pGz9fc') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
