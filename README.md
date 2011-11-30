@@ -3,7 +3,7 @@
 ## SYNOPSIS
 
 `php-build` `--definitions` <br>
-`php-build` [`-i`|`--ini` <var>env</var>] <var>definition</var> <var>prefix</var>
+`php-build` [`-i`|`--ini` <var>env</var>] <var>definition</var> <var>prefix</var> <var>cflags</var> <var>makeflags</var>
 
 ## DESCRIPTION
 
@@ -22,6 +22,13 @@ flag. Definitions are looked up in `share/php-build/definitions`.
 To build a definition pass it as the <var>definition</var> argument
 and the path where you want to place the compiled artifacts
 as <var>prefix</var> argument.
+
+You can pass additionnal GCC flags using the <var>cflags</var> parameter.
+For example, tune the optimization parameter by passing -O
+
+Also, it is possible to play with make options. Use the <var>makeflags</var>
+parameter for that.
+For example, you can parralelize jobs in threads using -j and -l.
 
 **Important:** You *cannot* move the <var>prefix</var> folder
 afterwards. All paths are written *absolute* to all
@@ -114,7 +121,7 @@ executables to `$PREFIX/bin`.
 
 php-build is Copyright (C) 2011 Christoph Hochstrasser
 <http://christophh.net>.
-
+This fork is provided by Julien Pauli
 
 [SYNOPSIS]: #SYNOPSIS "SYNOPSIS"
 [DESCRIPTION]: #DESCRIPTION "DESCRIPTION"

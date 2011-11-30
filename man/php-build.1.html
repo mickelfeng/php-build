@@ -75,7 +75,7 @@
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
 <p><code>php-build</code> <code>--definitions</code> <br />
-<code>php-build</code> [<code>-i</code>|<code>--ini</code> <var>env</var>] <var>definition</var> <var>prefix</var></p>
+<code>php-build</code> [<code>-i</code>|<code>--ini</code> <var>env</var>] <var>definition</var> <var>prefix</var> <var>cflags</var> <var>makeflags</var></p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
@@ -94,6 +94,13 @@ flag. Definitions are looked up in <code>share/php-build/definitions</code>.</p>
 <p>To build a definition pass it as the <var>definition</var> argument
 and the path where you want to place the compiled artifacts
 as <var>prefix</var> argument.</p>
+
+<p>You can pass additionnal GCC flags using the <var>cflags</var> parameter.
+For example, tune the optimization parameter by passing -O</p>
+
+<p>Also, it is possible to play with make options. Use the <var>makeflags</var>
+parameter for that.
+For example, you can parralelize jobs in threads using -j and -l.</p>
 
 <p><strong>Important:</strong> You <em>cannot</em> move the <var>prefix</var> folder
 afterwards. All paths are written <em>absolute</em> to all

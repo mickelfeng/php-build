@@ -24,13 +24,15 @@ set -e
 #
 #/ php-build, Compile and Install PHP
 #/
-#/ Usage: php-build [--definitions] [--ini|i <environment>] [<definition>] [<prefix>]
+#/ Usage: php-build [--definitions] [--ini|i <environment>] [<definition>] [<prefix>] [<cflags>] [<makeflags>]
 #/
 #/ Arguments:
 #/   definition:    What release should be used, as well as release-specific
 #/                  configuration.
 #/   prefix:        All built Executables, Configs and Libs are placed in this
 #/                  directory. It's created if it doesn't exist.
+#/   cflags:        Additional CFLAGS to pass to GCC. Example "-O0 -finline-functions"
+#/   makeflags:     Additional make flags. Example "-j4 -l2.5"
 #/
 #/ Options:
 #/   --definitions: Lists all available definitions
@@ -111,6 +113,12 @@ DEFINITION=$1
 
 # The built PHP version is placed in this directory.
 PREFIX=$2
+
+# Additional CFLAGS
+CFLAGS=$3
+
+# Additional make options
+MAKE_FLAGS=$4
 
 # Error Code to return if a defintion was not found.
 E_DEFINITION_NOT_FOUND=127
@@ -245,14 +253,17 @@ function build_package {
 
     configure_package "$source_path"
 
+    log "Additional Make flags" "$MAKE_FLAGS"
+
     log "Make" "$source_path"
 
     cd "$source_path"
     {
-        make
+        make clean
+        make $MAKE_FLAGS
         make install
         make clean
-    } > /dev/null
+    } > "$MAKE_LOG_PATH"
     cd "$cwd"
 
     if [ -f "$PREFIX/bin/php.dSYM" ]; then
@@ -398,7 +409,9 @@ function configure_package {
         argv="$argv --with-libdir=lib64"
     fi
 
-    ./configure $argv > /dev/null
+    log "Additionnal CFLAGS" "$CFLAGS"
+
+    ./configure CFLAGS="$CFLAGS" $argv >  "$CONFIGURE_LOG_PATH"
 
     cd "$backup_pwd"
 }
@@ -430,9 +443,11 @@ function cleanup_abort {
 # and the downloaded packages.
 init
 
-# Generate the Path for the build log.
+# Generate the Path for the logs.
 TIME="$(date "+%Y%m%d%H%M%S")"
 LOG_PATH="$PHP_BUILD_ROOT/var/log/php-build/error.$DEFINITION.$TIME.log"
+MAKE_LOG_PATH="$PHP_BUILD_ROOT/var/log/php-build/make.$DEFINITION.$TIME.log"
+CONFIGURE_LOG_PATH="$PHP_BUILD_ROOT/var/log/php-build/configure.$DEFINITION.$TIME.log"
 
 # Redirect everything logged to STDERR (except messages by php-build itself)
 # to the Log file.
